@@ -1,0 +1,4 @@
+knife
+*.o
+*.d
+.DS_Store

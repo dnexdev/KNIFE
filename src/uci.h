@@ -1,0 +1,27 @@
+#pragma once
+
+#include "move.h"
+#include "search.h"
+#include <memory>
+#include <string>
+#include <thread>
+#include <vector>
+
+class UCI {
+public:
+    UCI() = default;
+    ~UCI() = default;
+
+    std::string msg{};
+    std::vector<std::string> tokens{};
+
+    std::unique_ptr<Engine> engine = std::make_unique<Engine>();
+    Move last_move = NO_MOVE;
+
+    std::vector<std::thread> search_threads{};
+
+    void initialize_uci() const;
+    void parse_position();
+    void parse_go();
+    void uci_loop();
+};

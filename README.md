@@ -1,6 +1,19 @@
 # KNIFE chess engine
 
-A chess engine with the core design philosophy being precise aggression.
+A UCI compatible chess engine with the core design philosophy being precise aggression.
+
+## Build
+
+```bash
+make
+./knife
+```
+
+Debug build:
+
+```bash
+make debug
+```
 
 ## Details
 - Bitboards + Magic Bitboards
