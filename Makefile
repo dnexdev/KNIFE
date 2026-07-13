@@ -7,7 +7,7 @@ SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS := $(SRCS:.cpp=.o)
 TARGET := knife
 
-.PHONY: all clean debug
+.PHONY: all clean debug perft
 
 all: $(TARGET)
 
@@ -20,6 +20,13 @@ $(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp
 debug: CXXFLAGS = -std=c++20 -O0 -g -Wall -Wextra -pthread
 debug: LDFLAGS = -pthread
 debug: clean $(TARGET)
+
+perft: $(TARGET)
+	@echo position startpos > perft_cmd.txt
+	@echo perft 5 >> perft_cmd.txt
+	@echo quit >> perft_cmd.txt
+	@./knife < perft_cmd.txt
+	@rm -f perft_cmd.txt
 
 clean:
 	rm -f $(OBJS) $(TARGET)
