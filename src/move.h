@@ -4,7 +4,7 @@
 #include "types.h"
 
 constexpr Move NO_MOVE = 0;
-constexpr Move NULL_MOVE = 0;
+constexpr Move NULL_MOVE = 0xFFFFFFFFu;
 
 constexpr int QUIET_FLAG = 0b0000;
 constexpr int CASTLE_FLAG = 0b0001;
@@ -26,7 +26,7 @@ inline constexpr int toSq(Move move) { return (static_cast<int>(move) & 0x00fc0)
 inline constexpr int movingPiece(Move move) { return (static_cast<int>(move) & 0x0f000) >> 12; }
 inline constexpr int flags(Move move) { return (static_cast<int>(move) & 0xf0000) >> 16; }
 
-inline constexpr bool isCap(Move move) { return (flags(move) & CAPTURE_FLAG) != 0; }
+inline constexpr bool isCap(Move move) { return (flags(move) & CAPTURE_FLAG) != 0 && flags(move) != EP_FLAG; }
 inline constexpr bool isEP(Move move) { return flags(move) == EP_FLAG; }
 inline constexpr bool isCas(Move move) { return flags(move) == CASTLE_FLAG; }
 inline constexpr bool isPromo(Move move) { return (flags(move) & PROMO_FLAG) != 0; }

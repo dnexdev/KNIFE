@@ -2,6 +2,10 @@
 
 #include "types.h"
 
+#if defined(_MSC_VER)
+#include <intrin.h>
+#endif
+
 constexpr Bitboard A_FILE = 0x0101010101010101ULL;
 constexpr Bitboard B_FILE = 0x0202020202020202ULL;
 constexpr Bitboard C_FILE = 0x0404040404040404ULL;
@@ -35,8 +39,25 @@ inline constexpr int pieceType(int pc) { return pc >> 1; }
 
 inline constexpr Bitboard bit(int sq) { return 1ULL << sq; }
 
-inline int lsb(Bitboard bb) { return __builtin_ctzll(bb); }
-inline int msb(Bitboard bb) { return 63 ^ __builtin_clzll(bb); }
+inline int lsb(Bitboard bb) {
+#if defined(_MSC_VER)
+    unsigned long idx;
+    _BitScanForward64(&idx, bb);
+    return static_cast<int>(idx);
+#else
+    return __builtin_ctzll(bb);
+#endif
+}
+
+inline int msb(Bitboard bb) {
+#if defined(_MSC_VER)
+    unsigned long idx;
+    _BitScanReverse64(&idx, bb);
+    return static_cast<int>(idx);
+#else
+    return 63 ^ __builtin_clzll(bb);
+#endif
+}
 
 inline int popLsb(Bitboard& bb) {
     int sq = lsb(bb);
@@ -44,5 +65,14 @@ inline int popLsb(Bitboard& bb) {
     return sq;
 }
 
-inline void flipBit(Bitboard& bb, int sq) { bb ^= bit(sq); }
+inline constexpr Bitboard rankBB(int sq) { return RANK_1 >> ((7 - rankOf(sq)) * 8); }
+inline constexpr Bitboard fileBB(int sq) { return A_FILE << fileOf(sq); }
+
+inline int popcount(Bitboard bb) {
+#if defined(_MSC_VER)
+    return static_cast<int>(__popcnt64(bb));
+#else
+    return __builtin_popcountll(bb);
+#endif
+}
 inline void flipBits(Bitboard& bb, int sq1, int sq2) { bb ^= bit(sq1) ^ bit(sq2); }

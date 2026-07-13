@@ -2,6 +2,8 @@
 
 #include <array>
 #include <cstdint>
+#include <string>
+#include <string_view>
 
 enum PieceType : int {
     PAWN,
@@ -45,9 +47,14 @@ enum Color : int {
     BOTH
 };
 
+constexpr int NO_SQ = -1;
+
 using Bitboard = uint64_t;
 using Move = uint32_t;
 
 extern const std::array<int, 128> CHAR_TO_PIECE;
 extern const char* PIECE_TO_CHAR;
 extern const char* SQ_TO_COORD[64];
+
+int squareFromCoord(std::string_view coord);
+std::string moveToString(Move move);
